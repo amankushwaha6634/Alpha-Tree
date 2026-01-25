@@ -1,6 +1,7 @@
 public class Main {
 
     // Node class to represent each tree node
+
     static class Node {
         int data;
         Node left, right;
@@ -73,191 +74,99 @@ public class Main {
     }
 }
 
-
 /*
-==========================
-📘 1. FULL BINARY TREE
-==========================
-Definition:
-- Every node has 0 or 2 children — never just 1 child.
+=====================================================
+❓ WHY Node CLASS IS DECLARED AS `static`
+=====================================================
 
-✅ Example of Full Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     / \     / \
-   🔵4 🔵5  🔵6 🔵7
+Reason:
+- Node is defined INSIDE the Main class.
+- A non-static inner class always needs an object of the outer class.
+- But here, Node represents a DATA STRUCTURE, not behavior of Main.
 
-❌ Not a Full Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     /        / \
-   🔵4      🔵6 🔵7
+If Node was NOT static:
+- You would need to create Main object first:
+    Main m = new Main();
+    Main.Node n = m.new Node(1);   ❌ unnecessary & messy
 
-Reason: 🔵2 has only one child 🔵4
+By making Node `static`:
+- Node belongs to the class, not to any instance of Main.
+- We can directly create nodes like:
+    Node root = new Node(1);       ✅ clean & correct
+
+📌 Interview one-liner:
+“Node is static because it doesn’t depend on Main’s instance; it’s just a tree node structure.”
 */
 
 
 /*
-==========================
-📘 2. COMPLETE BINARY TREE
-==========================
-Definition:
-- All levels are completely filled **except possibly the last**.
-- Last level is filled **from left to right** (no gaps).
+=====================================================
+❓ WHY CONSTRUCTOR IS `public`
+=====================================================
 
-✅ Example of Complete Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     / \     /
-   🔵4 🔵5 🔵6
+Reason:
+- We want to create Node objects freely wherever needed.
+- Even though Node is inside Main, `public` is standard practice.
 
-❌ Not a Complete Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     /   \      \
-   🔵4  🔵5     🔵7
+If constructor was private:
+- You could NOT create nodes outside the class ❌
 
-Reason: Last level has a right node (🔵7) without filling left first.
+Example needed:
+    root.left = new Node(2);
+    root.right = new Node(3);
+
+📌 Best practice:
+- Keep constructors public unless you want to restrict object creation.
+
+📌 Interview one-liner:
+“Constructor is public to allow easy and unrestricted creation of tree nodes.”
 */
 
 
 /*
-==========================
-📘 3. PERFECT BINARY TREE
-==========================
-Definition:
-- All internal nodes have exactly 2 children.
-- All leaf nodes are at the same level.
+=====================================================
+❓ WHY `this` IS NOT USED IN CONSTRUCTOR ASSIGNMENT
+=====================================================
 
-✅ Example of Perfect Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     / \     / \
-   🔵4 🔵5  🔵6 🔵7
+Constructor code:
+    public Node(int key) {
+        data = key;
+        left = right = null;
+    }
 
-❌ Not a Perfect Binary Tree:
-          🔵1
-         /   \
-      🔵2     🔵3
-     /
-   🔵4
+Reason:
+- There is NO naming conflict.
+- Parameter name is `key`
+- Instance variable name is `data`
 
-Reason: Leaf nodes are at different levels and internal nodes don’t all have 2 children.
-*/
+So Java clearly understands:
+    data → instance variable
+    key  → constructor parameter
 
+When `this` IS required:
+    public Node(int data) {
+        this.data = data;   // needed because names are same
+    }
 
+📌 Rule to remember:
+- Use `this` ONLY when parameter name and instance variable name are SAME.
 
-/*
-==========================
-📘 4. BALANCED BINARY TREE
-==========================
-
-Definition:
-A binary tree is considered BALANCED if:
-  - For every node, the height of the left and right subtrees differs by **at most 1**
-  - The height of the tree is **O(log₂(n))**, where `n` is the total number of nodes
-
-In other words:
-- No branch of the tree should be "too deep" compared to others.
-- The tree shouldn't lean too much to one side.
-- Ensures good performance for operations like insert/search/delete in O(log n) time.
-
-💡 log₂(n) means: if there are n nodes, the height should be around log base 2 of n.
-Example:
-  If n = 7, then log₂(7) ≈ 2.8 → height should be about 3 (acceptable).
-
-✅ Balanced Binary Tree Example:
-          🔵1
-         /   \
-      🔵2     🔵3
-     /         \
-   🔵4         🔵5
-
-Explanation:
-- 🔵1: left height = 2, right height = 2 → ✅
-- 🔵2 and 🔵3: both subtrees are balanced → ✅
-- Total height = 3 → close to log₂(5) ≈ 2.3 → ✅
-
-❌ Unbalanced Binary Tree Example:
-          🔵1
-         /
-      🔵2
-     /
-   🔵3
-  /
-🔵4
-
-Explanation:
-- 🔵1's left height = 3, right height = 0 → difference = 3 → ❌
-- Total height = 4, n = 4 → log₂(4) = 2 → but height = 4 → ❌ too deep
-- This is a left-skewed tree → **not balanced**
-
-📌 Summary:
-Balanced Tree:
-- Height ≈ log₂(n)
-- Left and right subtree heights differ by ≤ 1 at every node
-
-Unbalanced Tree:
-- Height much greater than log₂(n)
-- Subtree heights differ too much (leaning to one side)
+📌 Interview one-liner:
+“`this` is not required here because there’s no variable shadowing.”
 */
 
 
 /*
-==========================
-📘 5. DEGENERATE TREE (Skewed Tree)
-==========================
+=====================================================
+📌 QUICK INTERVIEW SUMMARY (VERY IMPORTANT)
+=====================================================
 
-Definition:
-- A **Degenerate Tree** is a binary tree where **each parent node has only one child**.
-- It behaves like a linked list (either all to the left or all to the right).
-- Worst-case scenario for binary trees.
-- Height becomes **O(n)** instead of **O(log₂(n))**
+✔ Node is static → avoids dependency on Main object
+✔ Constructor is public → allows node creation freely
+✔ `this` not used → no naming conflict
 
-👎 Problem:
-- All operations (search, insert, delete) become slow: O(n) instead of O(log n)
-- Completely defeats the purpose of using a binary tree
-
-✅ Example: Left-Skewed Degenerate Tree
-
-          🔵1
-         /
-       🔵2
-       /
-     🔵3
-     /
-   🔵4
-
-Explanation:
-- Every node has only a **left child**
-- Height = 4, Nodes = 4 → log₂(4) = 2 → Height ≠ log₂(n) → ❌ Not balanced
-
-✅ Example: Right-Skewed Degenerate Tree
-
-          🔵1
-             \
-             🔵2
-                \
-                🔵3
-                   \
-                   🔵4
-
-Explanation:
-- Every node has only a **right child**
-- Still height = 4, but log₂(4) = 2 → ❌ Not balanced
-
-📌 Summary:
-Degenerate Tree:
-- Height = n
-- log₂(n) ≪ n → violates balanced tree property
-- Acts like a linked list → poor performance
-
-Balanced Tree:
-- Height ≈ log₂(n)
-- Fast operations → O(log n)
+These choices make the code:
+- Cleaner
+- Easier to use
+- Interview-ready
 */

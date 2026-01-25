@@ -131,27 +131,40 @@ public class Main {
     }
 }
 
+   /*
+        ------------------------------------------------------------
+        🔁 Strategy:
+        1. Add root node (if it's not a leaf).
+        2. Add left boundary (top-down, excluding leaves).
+        3. Add all leaf nodes (DFS, left to right).
+        4. Add right boundary (bottom-up, excluding leaves).
+        ------------------------------------------------------------
 
-/*
-📘 Boundary Traversal = Anti-clockwise traversal of:
-   1. Root (if not leaf)
-   2. Left boundary (excluding leaves)
-   3. Leaf nodes (left → right)
-   4. Right boundary (excluding leaves, reversed)
+        🧪 Dry Run Example:
+            Tree:
+                    1
+                   / \
+                  2   3
+                 / \   \
+                4   5   6
+                   / \   \
+                  7   8   9
 
-🔁 Strategy:
-- Left boundary: go left (or right if left is null)
-- Leaves: DFS to collect all leaf nodes
-- Right boundary: go right (or left if right is null) → reverse
+        Step 1 → Root: [1]
+        Step 2 → Left boundary: [2, 4]  → [1, 2, 4]
+        Step 3 → Leaves: [7, 8, 9]      → [1, 2, 4, 7, 8, 9]
+        Step 4 → Right boundary: [6, 3] → [1, 2, 4, 7, 8, 9, 6, 3]
 
+        ✅ Final Output: 1 2 4 7 8 9 6 3
+        ------------------------------------------------------------
 
-Time Complexity:  O(n)
-  - We visit each node once: left boundary + leaves + right boundary
-
-Space Complexity: O(n)
-  - Output list + extra temp list (for right boundary)
-
- */
+        📝 Notes:
+        - Time Complexity: O(N), visiting each node once.
+        - Space Complexity: O(N) for result + temporary right boundary list.
+        - Avoid duplicates: do not add leaves in left/right boundary steps.
+        - Node 5 is skipped because it’s not on boundary and not a leaf.
+        ------------------------------------------------------------
+        */
 
 /*
 Tree:
