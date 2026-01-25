@@ -121,3 +121,50 @@ Legend:
 ➡️ Output: 4 2 5 1 3 6
 ➡️ Output: 4 5 2 6 3 1
 */
+
+
+/*
+=====================================================
+❓ WHY preorder / inorder / postorder METHODS ARE STATIC
+=====================================================
+
+Reason 1️⃣:
+- These traversal methods do NOT depend on any instance
+  variables of the BinaryTree class.
+- They only work on the Node reference passed as a parameter.
+
+Example:
+    preorder(Node root)
+→ uses only:
+  - root.data
+  - root.left
+  - root.right
+
+Reason 2️⃣:
+- Since no object-specific data is required, creating a
+  BinaryTree object would be unnecessary.
+
+Without static:
+    BinaryTree tree = new BinaryTree();
+    tree.preorder(root);     ❌ unnecessary object creation
+
+With static:
+    BinaryTree.preorder(root);   ✅ clean and efficient
+
+Reason 3️⃣:
+- In DSA, traversal methods are utility/helper functions.
+- Utility functions should be static because they belong
+  to the class logic, not to any particular object.
+
+Reason 4️⃣:
+- The tree structure is stored in Node objects, not inside
+  the BinaryTree class itself.
+- So traversal logic naturally operates on Node references.
+
+📌 Interview one-liner:
+“Traversal methods are static because they don’t rely on any
+BinaryTree object state; they operate purely on Node references.”
+
+=====================================================
+*/
+
