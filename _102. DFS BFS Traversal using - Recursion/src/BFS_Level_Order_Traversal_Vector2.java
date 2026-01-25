@@ -66,6 +66,7 @@ public class BFS_Level_Order_Traversal_Vector2 {
 
             // 📦 This will store all levels
             List<List<Integer>> result = new ArrayList<>();
+            // Initial state : result = [ ]
 
             // 🛑 Edge case: empty tree
             if (root == null) return result;
@@ -144,57 +145,157 @@ public class BFS_Level_Order_Traversal_Vector2 {
     }
 }
 
-
 /*
 =====================================================
-👀 DRY RUN – LEVEL ORDER TRAVERSAL (BFS)
+👀 DETAILED DRY RUN – LEVEL ORDER TRAVERSAL (BFS)
 =====================================================
 
-Preorder array:
+Preorder array used to build the tree:
 {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1}
 
-✅ Constructed Binary Tree:
+After buildTree(), the tree looks like:
 
-                   🔵1
-                 /     \
-              🔵2       🔵3
-             /   \         \
-           🔵4   🔵5       🔵6
+                   1
+                 /   \
+               2       3
+             /   \       \
+            4     5       6
 
-=====================================================
-🧺 BFS USING QUEUE + LEVEL SIZE
-=====================================================
+-----------------------------------------------------
+📌 DATA STRUCTURES USED
+-----------------------------------------------------
+Queue<Node> q          → stores nodes to be processed
+List<List<Integer>> result → stores nodes level by level
 
-Initial Queue:
-[1]
-
-Level 0:
-- levelSize = 1
-- Process node: 1
-- currentLevel = [1]
-- Add children → 2, 3
-- Queue = [2, 3]
-→ result = [[1]]
-
-Level 1:
-- levelSize = 2
-- Process nodes: 2, 3
-- currentLevel = [2, 3]
-- Add children → 4, 5, 6
-- Queue = [4, 5, 6]
-→ result = [[1], [2, 3]]
-
-Level 2:
-- levelSize = 3
-- Process nodes: 4, 5, 6
-- currentLevel = [4, 5, 6]
-- No children to add
-- Queue becomes empty
-→ result = [[1], [2, 3], [4, 5, 6]]
+-----------------------------------------------------
+🚀 INITIAL STATE
+-----------------------------------------------------
+q = [1]
+result = [ ]
 
 =====================================================
-🖨️ FINAL OUTPUT:
-[[1], [2, 3], [4, 5, 6]]
+LEVEL 0 (Root Level)
+=====================================================
+
+Step 1:
+- q.size() = 1 → levelSize = 1
+- Means: there is ONLY 1 node at this level
+
+Step 2:
+- Create empty list for this level
+  currentLevel = [ ]
+
+Step 3:
+- Remove node from queue → 1
+- Add node value to currentLevel
+  currentLevel = [1]
+
+Step 4:
+- Add children of node 1 to queue
+  left child → 2
+  right child → 3
+
+Queue after adding children:
+q = [2, 3]
+
+Step 5:
+- Add currentLevel to result
+
+result = [
+  [1]
+]
+
+=====================================================
+LEVEL 1
+=====================================================
+
+Step 1:
+- q.size() = 2 → levelSize = 2
+- Means: there are 2 nodes at this level
+
+Step 2:
+- Create empty list for this level
+  currentLevel = [ ]
+
+Step 3:
+- Remove node → 2
+- Add to currentLevel
+  currentLevel = [2]
+- Add children of 2 → 4 and 5
+
+Queue now:
+q = [3, 4, 5]
+
+Step 4:
+- Remove next node → 3
+- Add to currentLevel
+  currentLevel = [2, 3]
+- Add children of 3 → only right child 6
+
+Queue now:
+q = [4, 5, 6]
+
+Step 5:
+- Add currentLevel to result
+
+result = [
+  [1],
+  [2, 3]
+]
+
+=====================================================
+LEVEL 2
+=====================================================
+
+Step 1:
+- q.size() = 3 → levelSize = 3
+- Means: there are 3 nodes at this level
+
+Step 2:
+- Create empty list for this level
+  currentLevel = [ ]
+
+Step 3:
+- Remove node → 4
+- Add to currentLevel → [4]
+- Node 4 has no children
+
+Step 4:
+- Remove node → 5
+- Add to currentLevel → [4, 5]
+- Node 5 has no children
+
+Step 5:
+- Remove node → 6
+- Add to currentLevel → [4, 5, 6]
+- Node 6 has no children
+
+Queue after processing all nodes:
+q = [ ]
+
+Step 6:
+- Add currentLevel to result
+
+result = [
+  [1],
+  [2, 3],
+  [4, 5, 6]
+]
+
+=====================================================
+🖨️ FINAL RESULT
+=====================================================
+
+result = [
+  [1],
+  [2, 3],
+  [4, 5, 6]
+]
+
+📌 KEY IDEA TO REMEMBER:
+- Queue size tells how many nodes belong to ONE level
+- currentLevel stores nodes of that level
+- result stores all levels together
 =====================================================
 */
 
