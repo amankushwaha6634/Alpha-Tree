@@ -197,3 +197,30 @@ Level 2:
 [[1], [2, 3], [4, 5, 6]]
 =====================================================
 */
+
+
+/*
+=====================================================
+💾 SPACE COMPLEXITY OF BFS IN COMPLETE / PERFECT BT
+=====================================================
+
+Key idea:
+- BFS space depends on the maximum width of the tree
+- Width = maximum number of nodes at any level
+
+Perfect Binary Tree:
+- Last level contains about n/2 nodes
+- Queue may store all these nodes at once
+
+Complete Binary Tree:
+- Last level is almost full
+- Still Θ(n/2) nodes in worst case
+
+Therefore:
+Auxiliary Space (queue) = O(n)
+
+📌 Interview one-liner:
+“In complete or perfect binary trees, BFS uses O(n)
+space because the queue can hold nodes of the widest level.”
+=====================================================
+*/
