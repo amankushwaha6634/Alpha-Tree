@@ -80,31 +80,124 @@ public class Inorder {
 📌 Time Complexity: O(n) — each node is visited once
 📌 Space Complexity: O(h) — max height of stack is height of tree
 
-📋 Example Tree:
-         🔵1
-       /     \
-     🔵2     🔵3
-    /   \       \
-  🔵4   🔵5     🔵6
 
-🧪 Dry Run (stack operations):
+ */
+/*
+=====================================================
+👀 CORRECT DRY RUN – ITERATIVE INORDER (ITERATION BASED)
+=====================================================
 
-Start:
-current = 1, stack = []
+Tree:
 
-Push 1 → current = 2
-Push 2 → current = 4
-Push 4 → current = null
+                   1
+                 /   \
+               2       3
+             /   \       \
+            4     5       6
 
-Pop 4 → print(4) → current = null
-Pop 2 → print(2) → current = 5
-Push 5 → current = null
-Pop 5 → print(5) → current = null
-Pop 1 → print(1) → current = 3
-Push 3 → current = null
-Pop 3 → print(3) → current = 6
-Push 6 → current = null
-Pop 6 → print(6) → Done ✅
+-----------------------------------------------------
+INITIAL STATE
+-----------------------------------------------------
+current = 1
+stack = [ ]
 
-🖨️ Output: 4 2 5 1 3 6
+=====================================================
+OUTER LOOP – ITERATION 1
+=====================================================
+
+Inner while (go left):
+Push 1 → stack = [1], current = 2
+Push 2 → stack = [1, 2], current = 4
+Push 4 → stack = [1, 2, 4], current = null
+
+Inner while ends (current == null)
+
+Pop + visit:
+Pop 4 → print 4
+Move to right child of 4 → null
+
+State after iteration 1:
+current = null
+stack = [1, 2]
+
+=====================================================
+OUTER LOOP – ITERATION 2
+=====================================================
+
+Inner while skipped (current == null)
+
+Pop + visit:
+Pop 2 → print 2
+Move to right child of 2 → 5
+
+State after iteration 2:
+current = 5
+stack = [1]
+
+=====================================================
+OUTER LOOP – ITERATION 3
+=====================================================
+
+Inner while (go left):
+Push 5 → stack = [1, 5], current = null
+
+Pop + visit:
+Pop 5 → print 5
+Move to right child of 5 → null
+
+State after iteration 3:
+current = null
+stack = [1]
+
+=====================================================
+OUTER LOOP – ITERATION 4
+=====================================================
+
+Inner while skipped
+
+Pop + visit:
+Pop 1 → print 1
+Move to right child of 1 → 3
+
+State after iteration 4:
+current = 3
+stack = [ ]
+
+=====================================================
+OUTER LOOP – ITERATION 5
+=====================================================
+
+Inner while:
+Push 3 → stack = [3], current = null
+
+Pop + visit:
+Pop 3 → print 3
+Move to right child of 3 → 6
+
+State after iteration 5:
+current = 6
+stack = [ ]
+
+=====================================================
+OUTER LOOP – ITERATION 6
+=====================================================
+
+Inner while:
+Push 6 → stack = [6], current = null
+
+Pop + visit:
+Pop 6 → print 6
+Move to right child of 6 → null
+
+State after iteration 6:
+current = null
+stack = [ ]
+
+=====================================================
+LOOP ENDS
+=====================================================
+
+Output:
+4 2 5 1 3 6
+=====================================================
 */
