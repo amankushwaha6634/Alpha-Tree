@@ -31,7 +31,7 @@ public class  Main {
 
         // 🧺 Use Queue for level-order traversal (BFS)
         Queue<Pair> q = new LinkedList<>();
-        q.offer(new Pair(root, 0));  // 🌟 root has index 0
+        q.add(new Pair(root, 0));  // 🌟 root has index 0
 
         while (!q.isEmpty()) {
             int size = q.size();
@@ -49,11 +49,11 @@ public class  Main {
 
                 // 📥 Left child index = 2 * index
                 if (node.left != null)
-                    q.offer(new Pair(node.left, 2 * curIndex + 1));
+                    q.add(new Pair(node.left, 2 * curIndex + 1));
 
                 // 📤 Right child index = 2 * index + 1
                 if (node.right != null)
-                    q.offer(new Pair(node.right, 2 * curIndex + 2));
+                    q.add(new Pair(node.right, 2 * curIndex + 2));
             }
 
             int width = last - first + 1;  // 📏 width at current level

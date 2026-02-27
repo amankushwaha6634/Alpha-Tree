@@ -1,168 +1,158 @@
-// 🌳 Node class for Binary Tree
-class Node {
-    int data;
-    Node left, right;
-
-    Node(int data) {
-        this.data = data;
-        left = right = null;
-    }
-}
+import java.util.*;
 
 public class Main {
 
-    // 🔁 Recursively modifies tree to satisfy Children Sum Property
-    public static void changeTree(Node root) {
-        if (root == null) return;
+    // 🌿 Node class - represents each node of the binary tree
+    static class Node {
+        int data;
+        Node left, right;
 
-        // 🧮 Step 1: Calculate sum of left and right child data
-        int child = 0;
-        if (root.left != null) child += root.left.data;
-        if (root.right != null) child += root.right.data;
-
-        // 📏 Step 2: If child sum is greater or equal, update root
-        if (child >= root.data) {
-            root.data = child;
-        } else {
-            // ↘️ Step 3: If root is greater, push root data to child
-            if (root.left != null) root.left.data = root.data;
-            else if (root.right != null) root.right.data = root.data;
+        Node(int data) {
+            this.data = data; // Initialize node value
         }
-
-        // 🔄 Step 4: Recur for left and right children
-        changeTree(root.left);
-        changeTree(root.right);
-
-        // 🔁 Step 5: After recursion, update current root to sum of children's data
-        int tot = 0;
-        if (root.left != null) tot += root.left.data;
-        if (root.right != null) tot += root.right.data;
-
-        if (root.left != null || root.right != null) root.data = tot;
     }
 
-    // 📤 Inorder Traversal to display the tree
-    public static void printInorder(Node root) {
-        if (root == null) return;
-        printInorder(root.left);
-        System.out.print(root.data + " ");
-        printInorder(root.right);
+    // 🔍 Function to check Children Sum Property
+    public static boolean isChildrenSum(Node root) {
+
+        // 📌 Base Case 1: Empty tree satisfies property
+        if (root == null) return true;
+
+        // 📌 Base Case 2: Leaf node (no children) always satisfies property
+        if (root.left == null && root.right == null) return true;
+
+        int left = 0, right = 0;
+
+        // Get left child value (if exists)
+        if (root.left != null)
+            left = root.left.data;
+
+        // Get right child value (if exists)
+        if (root.right != null)
+            right = root.right.data;
+
+        // ⭐ Condition to check:
+        // Current node value should be equal to sum of left and right child
+        // AND both left and right subtrees should also satisfy property
+        if (root.data == left + right &&
+                isChildrenSum(root.left) &&
+                isChildrenSum(root.right)) {
+            return true;
+        }
+
+        // ❌ If condition fails
+        return false;
     }
 
     public static void main(String[] args) {
+
         /*
-            Tree before change:
+                 10
+                /  \
+               8    2
+              / \    \
+             3   5    2
 
-              100
-            /     \
-          40       20
-         /  \     /   \
-        2    5   30    40
-
-
-            Expected tree after applying Children Sum Property:
-
-              *120*
-            /       \
-         50          70
-       /   \       /    \
-     25     25   30      40
+        8 = 3 + 5
+        2 = 0 + 2
+        10 = 8 + 2  ✅ Valid
         */
 
-        // 🧱 Constructing the Tree
-        Node root = new Node(50);
-        root.left = new Node(7);
+        // 🌳 Tree construction
+        Node root = new Node(10);
+        root.left = new Node(8);
         root.right = new Node(2);
         root.left.left = new Node(3);
         root.left.right = new Node(5);
-        root.right.right = new Node(1);
+        root.right.right = new Node(2);
 
-        // 📌 Before Change
-        System.out.println("Inorder before applying Children Sum Property:");
-        printInorder(root);
-        System.out.println();
-
-        // 🛠️ Change Tree
-        changeTree(root);
-
-        // 📌 After Change
-        System.out.println("Inorder after applying Children Sum Property:");
-        printInorder(root);
-        System.out.println();
+        // 🚀 Check Children Sum Property
+        if (isChildrenSum(root))
+            System.out.println("Children Sum Property satisfied");
+        else
+            System.out.println("Not satisfied");
     }
 }
 
 /*
-🔍 DRY RUN – Using Diagram from Image (Children Sum Property)
+🧠 SHORT NOTES: Children Sum Property (Check)
 
-📌 Initial Tree:
-              100
-            /     \
-          40       20
-         /  \     /   \
-        2    5   30    40
+📌 Goal:
+Verify that every node’s value equals the sum of its children.
 
-------------------------------------------
-➡ Step 1: Node(100)
-    child sum = 40 + 20 = 60
-    → 60 < 100 ⇒ push root value (100) down to children
+📘 Rules:
+- Leaf node → always valid
+- If a child is missing → treat its value as 0
 
-    → Left child = 50, Right child = 50 (so they sum to 100)
+🛠️ Steps:
+1. If root is null → return true
+2. If leaf node → return true
+3. Get left child value (if exists)
+4. Get right child value (if exists)
+5. Check:
+   root.data == left + right
+6. Recursively check left and right subtrees
 
-🆕 Updated:
-              100
-            /     \
-         *50*     *50*
-         /  \     /   \
-        2    5   30    40
-
-------------------------------------------
-➡ Step 2: Node(50) (left subtree)
-    child sum = 2 + 5 = 7
-    → 7 < 50 ⇒ push 50 down to children equally or maintain structure
-
-    → Left = 25, Right = 25 (just to match total sum)
-
-🆕 Updated:
-              100
-            /     \
-         *50*     50
-         /  \     /   \
-      *25*  *25* 30    40
-
-------------------------------------------
-➡ Step 3: Node(50) (right subtree)
-    child sum = 30 + 40 = 70
-    → 70 > 50 ⇒ set root = 70
-
-🆕 Updated:
-              100
-            /     \
-          50     *70*
-         /  \     /   \
-       25   25  30    40
-
-------------------------------------------
-➡ Now start backtracking (post-order) and adjust root to child sums
-
-✓ Node(50 left): 25 + 25 = 50 → OK
-✓ Node(70 right): 30 + 40 = 70 → OK
-✓ Root(100): 50 + 70 = *120* → so update root = 120
-
-✅ Final Tree:
-              *120*
-            /       \
-         50          70
-       /   \       /    \
-     25     25   30      40
-
-------------------------------------------
-🎯 Summary:
-• Nodes are updated to ensure each parent = left + right
-• When child sum < parent → push value down
-• When child sum ≥ parent → update parent
+📦 Data Structures:
+- Recursion (DFS)
 
 🕒 Time Complexity: O(N)
-🧠 Space Complexity: O(H)
+→ Every node is visited once
 
+🧠 Space Complexity: O(H)
+→ Recursion stack (H = tree height)
+
+🎯 Output:
+Returns true if entire tree satisfies Children Sum Property
+*/
+
+
+/*
+🧪 DRY RUN: Children Sum Property (Check)
+
+Example Tree:
+                 10
+                /  \
+               8    2
+              / \    \
+             3   5    2
+
+Rule:
+For every node:
+node.data == left.data + right.data
+(Missing child → value = 0)
+
+-------------------------------------------------
+
+1️⃣ Check Node 10
+   left = 8
+   right = 2
+   sum = 10 → matches ✅
+
+   Now check subtrees
+
+-------------------------------------------------
+
+2️⃣ Check Node 8
+   left = 3
+   right = 5
+   sum = 8 → matches ✅
+
+-------------------------------------------------
+
+3️⃣ Check Node 2 (right subtree)
+   left = 0
+   right = 2
+   sum = 2 → matches ✅
+
+-------------------------------------------------
+
+4️⃣ Leaf Nodes (3, 5, 2)
+   Leaf nodes automatically satisfy property ✅
+
+-------------------------------------------------
+
+📤 Final Result:
+All nodes satisfy condition → TRUE
+Children Sum Property satisfied
 */
