@@ -71,50 +71,29 @@ public class Main {
 }
 
 /*
-🧠 SHORT NOTES: Root to Node Path (Wrapper + Helper)
+📌 GOAL:
+Find path from root to given node in binary tree.
 
-📌 Goal:
-Return path from root to a given target node.
+🛠️ ALGORITHM:
+1. Traverse tree recursively.
+2. At each node, add it to path.
+3. If node is the target → return true.
+4. Else recur for left and right.
+5. If neither returns true → backtrack (remove node from path).
 
-📘 Design Pattern:
-Wrapper + Helper
+💡 Tip:
+Use backtracking — only keep the correct path.
 
-Wrapper (solve):
-- Creates empty path list
-- Handles null root
-- Calls recursive helper
-- Returns final path
+🕒 Time: O(N) → visit all nodes in worst case
+🧠 Space: O(H) → path list + recursion stack (H = height)
 
-Helper (getPath):
-1. If node is null → return false
-2. Add current node to path
-3. If node == target → return true
-4. Recurse left OR right
-5. If both false → backtrack (remove node) and return false
-
-💡 Key Concept: Backtracking
-Only nodes on the correct path remain in the list.
-
-💡 Short-Circuit Optimization:
-getPath(left) || getPath(right)
-If left returns true → right is NOT executed.
-
-📦 Data Structures:
-- ArrayList → stores path
-- Recursion stack
-
-🕒 Time Complexity: O(N)
-🧠 Space Complexity: O(H)  (H = tree height)
-
-🎯 Output:
-Path from root to target node
-*/
+ */
 
 
 /*
-🧪 DRY RUN: Root to Node Path (Wrapper + Helper)
+🧪 DRY RUN: getPath(root = 1, target = 5)
 
-Example Tree:
+Tree:
         1
        / \
       2   3
@@ -123,40 +102,50 @@ Example Tree:
 
 Target = 5
 
-▶ Step 0: Wrapper Call
-solve(root, 5)
-- path = []
-- Calls getPath(1, [], 5)
+1️⃣ Call getPath(1, 5, [])
+   - root = 1 → add 1 → path = [1]
+   - 1 != 5 → call left and right
 
--------------------------------------------------
+2️⃣ getPath(2, 5, [1])
+   - root = 2 → add 2 → path = [1, 2]
+   - 2 != 5 → call left and right
 
-1️⃣ getPath(1)
-   path = [1]
-   1 != 5
-   → search left subtree
+3️⃣ getPath(4, 5, [1, 2])
+   - root = 4 → add 4 → path = [1, 2, 4]
+   - 4 != 5 → no children → backtrack
+   - remove 4 → path = [1, 2]
 
-2️⃣ getPath(2)
-   path = [1, 2]
-   2 != 5
-   → search left subtree
+4️⃣ getPath(5, 5, [1, 2])
+   - root = 5 → add 5 → path = [1, 2, 5]
+   - 5 == 5 → ✅ return true
 
-3️⃣ getPath(4)
-   path = [1, 2, 4]
-   4 != 5
-   → left = null, right = null
-   ❌ Not found → Backtrack
-   path = [1, 2]
+✅ Final Path: [1, 2, 5]
 
-4️⃣ getPath(5)
-   path = [1, 2, 5]
-   5 == target ✅
-   → return true
-
-✔ Due to short-circuit OR:
-Right subtree of node 1 is NOT explored.
-
--------------------------------------------------
-
-📤 Final Path:
-[1, 2, 5]
+Output:
+Path from root to node 5: [1, 2, 5]
 */
+
+
+/*
+🧠 SHORT-CIRCUIT LOGIC IN JAVA (|| - OR Operator):
+if (getPath(root.left, target, path) || getPath(root.right, target, path)) {
+        return true;
+}
+
+In this condition:
+if (getPath(root.left, target, path) || getPath(root.right, target, path))
+
+➡️ Java evaluates the left side first:
+   - If getPath(root.left, ...) returns true,
+     then the right side (getPath(root.right, ...)) is NOT evaluated.
+
+✅ This is called "short-circuiting" with || (logical OR).
+⚡ Benefit: Avoids unnecessary recursion into the right subtree
+   if the path has already been found in the left subtree.
+
+🧪 Example:
+   if (true || someOtherCheck()) → "someOtherCheck()" will NOT be executed.
+
+📌 Result: More efficient traversal.
+*/
+
