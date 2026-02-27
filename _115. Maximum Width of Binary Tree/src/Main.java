@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public class  Main {
 
     // 🌿 Node structure
     static class Node {
@@ -90,48 +90,117 @@ public class Main {
 }
 
 /*
-🧠 DRY RUN: On Tree
+🧠 SHORT NOTES: Maximum Width of Binary Tree
 
-            1
-          /   \
-        2       3
-       /         \
-      4           5
+📌 Goal:
+Find the maximum width among all levels.
+Width = distance between leftmost and rightmost nodes (including null gaps).
 
-📌 Indexing:
-- Root has index 0
-- For any node at index i:
-    → left child = 2*i + 1
-    → right child = 2*i + 2
+📘 Concept:
+- Use Level Order Traversal (BFS)
+- Assign each node an index as if the tree is a complete binary tree
+    Left  = 2*i + 1
+    Right = 2*i + 2
+- Width of level = lastIndex - firstIndex + 1
 
-Level 0:
-  Queue = [(1, 0)]
-  Width = 0 - 0 + 1 = 1
+💡 Important Optimization:
+curIndex = index - minIndex
+→ Prevents integer overflow for deep trees.
 
-Level 1:
-  Queue = [(2, 1), (3, 2)]
-  Width = 2 - 1 + 1 = 2
+🛠️ Steps:
+1. Push root with index = 0
+2. For each level:
+   - Store minIndex (first node index)
+   - Normalize indices
+   - Track first and last index
+   - Calculate width
+3. Update maxWidth
 
-Level 2:
-  Queue = [(4, 3), (5, 6)]
-  Width = 6 - 3 + 1 = 4 ✅ (max)
-
-🎯 Final Output = 4
-
------------------------------
-📌 NOTES: Maximum Width of Binary Tree
-
-▶ Approach:
-- Use BFS level-order traversal.
-- Track node **index** at each level.
-- Width = last index - first index + 1 at that level
+📦 Data Structures:
+- Queue<Pair(node, index)> → BFS
 
 🕒 Time Complexity: O(N)
-→ Each node visited once.
-
 🧠 Space Complexity: O(N)
-→ In worst case, queue stores all nodes at one level.
 
-Why normalize index (curIndex = index - minIndex)?
-→ Prevents integer overflow for deep trees.
+🎯 Output:
+Maximum width across all levels
+*/
+
+/*
+🧪 DRY RUN: Maximum Width of Binary Tree (Using Index-Based BFS)
+
+Example Tree:
+                   1
+                 /   \
+               2       3
+              /         \
+             4           5
+
+Indexing Rule (like complete binary tree):
+Left child  → 2*i + 1
+Right child → 2*i + 2
+
+-------------------------------------------------
+
+▶ Initial State:
+Queue = [(1, index=0)]
+maxWidth = 0
+
+-------------------------------------------------
+
+Level 0:
+Nodes: [1]
+minIndex = 0
+
+Process:
+curIndex = 0 - 0 = 0
+first = 0, last = 0
+
+Add children:
+2 → index = 1
+3 → index = 2
+
+Width = last - first + 1 = 1
+maxWidth = 1
+
+Queue = [(2,1), (3,2)]
+
+-------------------------------------------------
+
+Level 1:
+minIndex = 1
+
+Process 2:
+curIndex = 1-1 = 0 → first = 0
+Add left child 4 → index = 1
+
+Process 3:
+curIndex = 2-1 = 1 → last = 1
+Add right child 5 → index = 4
+
+Width = 1 - 0 + 1 = 2
+maxWidth = 2
+
+Queue = [(4,1), (5,4)]
+
+-------------------------------------------------
+
+Level 2:
+minIndex = 1
+
+Process 4:
+curIndex = 1-1 = 0 → first = 0
+
+Process 5:
+curIndex = 4-1 = 3 → last = 3
+
+Width = 3 - 0 + 1 = 4
+maxWidth = 4
+
+Queue = []
+
+-------------------------------------------------
+
+📤 Final Answer:
+Maximum Width = 4
 */
