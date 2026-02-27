@@ -41,7 +41,7 @@ public class Main {
             return true;
         }
 
-        // ❌ Backtrack
+        // ❌ Backtrack : if neither left nor right returns true remove node from path and return false
         path.remove(path.size() - 1);
         return false;
     }
