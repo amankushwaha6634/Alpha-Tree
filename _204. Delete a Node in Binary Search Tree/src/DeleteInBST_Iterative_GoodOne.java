@@ -143,10 +143,8 @@ public class DeleteInBST_Iterative_GoodOne {
         inorder(root);
     }
 }
-
 /*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 DRY RUN: Delete 3 from BST (Iteratively)
+🧪 DRY RUN: Delete Node = 3
 
 Original Tree:
               8
@@ -157,81 +155,102 @@ Original Tree:
             / \     /
            4   7   13
 
-🎯 Delete key = 3
-→ Found 3 under parent 8
+-------------------------------------------------
 
-✔ 3 has two children (1 and 6)
-→ Inorder Successor = 4 (leftmost in right subtree of 3)
-→ Replace 3 with 4
+1️⃣ Search Node
+curr = 3
+parent = 8
 
-🌿 Now delete node 4 (which has no left child)
+Node 3 has two children → Case 4
+-------------------------------------------------
 
-Resulting Tree:
+2️⃣ Left Subtree of 3:
+        1
+         \
+          (no right)
+
+Rightmost of left subtree = 1
+
+-------------------------------------------------
+
+3️⃣ Attach Right Subtree of 3 to 1 (as its rightmost node of left subtree)
+Right subtree = 6
+
+After attaching:
+        1
+         \
+          6
+         / \
+        4   7
+
+-------------------------------------------------
+
+4️⃣ Replace 3 with left subtree
+
+New Tree:
               8
             /   \
-           4     10
-          / \      \
-         1   6      14
-              \     /
-               7   13
+           1     10
+            \      \
+             6      14
+            / \     /
+           4   7   13
 
-✅ Inorder After: 1 4 6 7 8 10 13 14
+-------------------------------------------------
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 Deletion Cases Summary (Iterative):
+📤 Final Inorder:
+1 4 6 7 8 10 13 14
 
-1️⃣ No child → Just disconnect
-2️⃣ One child → Link parent to child
-3️⃣ Two children → Replace with inorder successor, then delete successor
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏱ TIME COMPLEXITY:
-- Average: O(log N)
-- Worst case (skewed tree): O(N)
-
-📦 SPACE COMPLEXITY:
-- O(1) → Fully iterative, no recursion stack
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BST property maintained ✅
 */
 
+/*
+🧠 SHORT NOTES: Delete Node in BST (Iterative – Attach Right to Left)
 
+📌 Goal:
+Delete a node from a Binary Search Tree while maintaining BST property.
 
- /*
-🧠 INORDER SUCCESSOR in BST (Used in Deletion)
+📘 BST Property:
+Left subtree < Node < Right subtree
 
-🎯 What is it?
-- The inorder successor of a node is the node with the **smallest value greater than the current node**.
-- It is the **next node in inorder traversal**.
+📘 Deletion Cases:
 
-📌 When do we need it?
-- During **deletion** of a node with **two children**, we replace the node's value with its inorder successor.
+1️⃣ Node not found
+→ Return original root
 
-🔍 How to find it?
-→ If node has a right child:
-   - Go to right subtree
-   - Keep going left until null
-   - That leftmost node is the inorder successor
+2️⃣ Node is a leaf
+→ Simply remove the node
 
-🧾 Example:
-        8
-      /   \
-     3     10
-    / \      \
-   1   6      14
-      / \     /
-     4   7   13
+3️⃣ Node has one child
+→ Connect parent directly to the child
 
-Delete node 3:
-→ Go to right: 6
-→ Go left: 4 (no more left)
-✅ Inorder Successor = 4
+4️⃣ Node has two children
+→ Instead of inorder successor:
+   - Take left subtree
+   - Find its rightmost node (maximum)
+   - Attach original right subtree to it
+   - Replace node with left subtree
 
-💡 Code Snippet:
-Node succ = node.right;
-while (succ.left != null) {
-    succ = succ.left;
-}
+🛠️ Steps:
+1. Search the node iteratively and track parent
+2. Handle leaf case
+3. Handle single child case
+4. If two children:
+   a. leftSub = curr.left
+   b. Find rightMost in leftSub
+   c. rightMost.right = curr.right
+   d. Replace curr with leftSub
 
-⌛ Time Complexity: O(H) → height of tree
+📦 Data Structures:
+- No extra DS
+- Pure pointer manipulation
+
+🕒 Time Complexity: O(H)
+→ H = height of tree
+
+🧠 Space Complexity: O(1)
+→ Fully iterative (no recursion)
+
+🎯 Output:
+BST remains valid after deletion
 */
