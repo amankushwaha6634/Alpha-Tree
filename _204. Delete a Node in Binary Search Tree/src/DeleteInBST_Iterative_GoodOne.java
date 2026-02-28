@@ -1,9 +1,9 @@
- public class DeleteInBST_Iterative_GoodOne {
+public class DeleteInBST_Iterative_GoodOne {
 
     // 🌳 BST Node structure
     static class Node {
-        int data;
-        Node left, right;
+        int data;          // Value stored in node
+        Node left, right;  // References to left and right child
 
         Node(int val) {
             this.data = val;
@@ -11,59 +11,95 @@
         }
     }
 
-    // 🔧 Iterative delete function
+    // 🔧 Iterative delete function in BST
     public static Node deleteNode(Node root, int key) {
-        Node parent = null;
-        Node curr = root;
 
-        // 🔍 1. Search for the node and keep track of parent
+        Node parent = null;   // Will store parent of node to delete
+        Node curr = root;     // Start searching from root
+
+        // 🔍 Step 1: Search for the node with given key
+        // Also keep track of its parent
         while (curr != null && curr.data != key) {
             parent = curr;
-            if (key < curr.data) curr = curr.left;
-            else curr = curr.right;
+
+            // Move left or right using BST property
+            if (key < curr.data)
+                curr = curr.left;
+            else
+                curr = curr.right;
         }
 
-        if (curr == null) return root; // ❌ Key not found
+        // ❌ Key not found → no deletion needed
+        if (curr == null) return root;
 
-        // 🧍‍♂️ 2. Case 1: Node has no children
+        // =====================================================
+        // Case 1: Node is a LEAF (no children)
+        // =====================================================
         if (curr.left == null && curr.right == null) {
+
+            // If the node to delete is root
             if (curr == root) return null;
-            if (parent.left == curr) parent.left = null;
-            else parent.right = null;
+
+            // Disconnect node from parent
+            if (parent.left == curr)
+                parent.left = null;
+            else
+                parent.right = null;
         }
 
-        // 🌿 3. Case 2: Node has only one child
+        // =====================================================
+        // Case 2: Node has ONLY ONE child
+        // =====================================================
         else if (curr.left == null || curr.right == null) {
+
+            // Identify the existing child
             Node child = (curr.left != null) ? curr.left : curr.right;
+
+            // If deleting root, return child as new root
             if (curr == root) return child;
-            if (parent.left == curr) parent.left = child;
-            else parent.right = child;
+
+            // Connect parent directly to child (bypass curr)
+            if (parent.left == curr)
+                parent.left = child;
+            else
+                parent.right = child;
         }
 
-        // 🌳 4. Case 3: Node has two children
+        // =====================================================
+        // Case 3: Node has TWO children
+        // Approach:
+        // Replace node with its left subtree
+        // Attach original right subtree to the rightmost node of left subtree
+        // =====================================================
         else {
-            // 🧮 Find inorder successor and its parent
-            Node succParent = curr;
-            Node succ = curr.right;
-            while (succ.left != null) {
-                succParent = succ;
-                succ = succ.left;
+
+            // Step 1: Save left subtree
+            Node leftSub = curr.left;
+
+            // Step 2: Find the rightmost node in left subtree
+            // (This is the maximum element of left subtree)
+            Node rightMost = leftSub;
+            while (rightMost.right != null) {
+                rightMost = rightMost.right;
             }
 
-            // 🔁 Replace value
-            curr.data = succ.data;
+            // Step 3: Attach the original right subtree
+            // to the rightmost node of left subtree
+            rightMost.right = curr.right;
 
-            // ❌ Delete successor node
-            if (succParent.left == succ)
-                succParent.left = succ.right;
+            // Step 4: Replace curr with left subtree
+            if (curr == root) return leftSub;
+
+            if (parent.left == curr)
+                parent.left = leftSub;
             else
-                succParent.right = succ.right;
+                parent.right = leftSub;
         }
 
-        return root;
+        return root;  // Return updated root
     }
 
-    // 🧾 Inorder Traversal
+    // 🧾 Inorder Traversal (prints BST in sorted order)
     public static void inorder(Node root) {
         if (root == null) return;
         inorder(root.left);
@@ -101,7 +137,7 @@
         inorder(root);
 
         int key = 3;
-        root = deleteNode(root, key);  // ❌ Delete node with key = 3
+        root = deleteNode(root, key);  // Delete node with value 3
 
         System.out.println("\nInorder after deleting " + key + ": ");
         inorder(root);
