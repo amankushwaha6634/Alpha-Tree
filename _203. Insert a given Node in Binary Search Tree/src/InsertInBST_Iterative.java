@@ -133,3 +133,38 @@ Initial Tree:
 - If duplicates must be inserted:
   → Define whether to place them on left/right consistently
 */
+
+/*
+🧠 SHORT NOTES: Insert in BST (Iterative)
+
+📌 Goal:
+Insert a new value into a Binary Search Tree while maintaining BST property.
+
+📘 BST Property:
+Left subtree < Node < Right subtree
+
+🛠️ Steps:
+1. Create a new node with given key
+2. If root is null → return new node (tree was empty)
+3. Start from root and traverse iteratively:
+   - If key < curr.data → move left
+   - If key > curr.data → move right
+   - If key == curr.data → duplicate → do not insert
+4. When curr becomes null:
+   - Insert new node as child of last parent
+
+📦 Data Structures:
+- No extra data structure
+- Only pointers (curr, parent)
+
+🕒 Time Complexity: O(H)
+→ H = height of tree
+- Balanced BST → O(log N)
+- Skewed BST → O(N)
+
+🧠 Space Complexity: O(1)
+→ Iterative approach, no recursion
+
+🎯 Output:
+BST remains valid and inorder traversal stays sorted.
+*/
