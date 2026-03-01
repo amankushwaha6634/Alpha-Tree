@@ -2,8 +2,8 @@ public class KthSmallestInBST {
 
     // 🌳 Tree Node definition
     static class Node {
-        int data;
-        Node left, right;
+        int data;        // Value stored in node
+        Node left, right; // Left and right child references
 
         Node(int val) {
             this.data = val;
@@ -11,27 +11,34 @@ public class KthSmallestInBST {
         }
     }
 
-    // 🧮 Counter to track kth visit
+    // 🧮 Global counter to track number of visited nodes during inorder
     static int count = 0;
 
-    // 🔍 Function to find Kth smallest using Inorder Traversal
+    // 🔍 Function to find Kth smallest element
     public static int kthSmallest(Node root, int k) {
-        count = 0; // Reset count before each call
-        return inorder(root, k);
+        count = 0;               // Reset counter for each function call
+        return inorder(root, k); // Perform inorder traversal
     }
 
+    // 🔁 Inorder Traversal (Left → Node → Right)
     private static int inorder(Node node, int k) {
+
+        // Base case: reached null node
         if (node == null) return -1;
 
-        // ➡ Recurse to left subtree
+        // 1️⃣ Traverse left subtree first (smaller elements)
         int left = inorder(node.left, k);
-        if (left != -1) return left; // If found in left, bubble it up
 
-        // 🧮 Visit current node
-        count++;
-        if (count == k) return node.data; // 🎯 Found kth smallest
+        // If kth element already found in left subtree, return it immediately
+        if (left != -1) return left;
 
-        // ➡ Recurse to right subtree
+        // 2️⃣ Visit current node
+        count++;  // Increase visited node count
+
+        // If this is the kth visited node → this is the answer
+        if (count == k) return node.data;
+
+        // 3️⃣ Traverse right subtree (larger elements)
         return inorder(node.right, k);
     }
 
@@ -57,66 +64,109 @@ public class KthSmallestInBST {
     public static void main(String[] args) {
         Node root = buildTestTree();
         int k = 3;
+
+        // Find kth smallest element
         int ans = kthSmallest(root, k);
+
         System.out.println("Kth Smallest Element = " + ans);
     }
 }
 
-
 /*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 DRY RUN: Find 3rd Smallest in BST
+⚠️ IMPORTANT: Why this line is needed?
 
-BST (Inorder = ascending):
-                5
-              /   \
-             3     7
-            / \   / \
-           2   4 6   8
+if (left != -1) return left;
 
-🔁 Inorder traversal sequence:
-→ Left → Node → Right
+Key Idea:
+This condition is NOT triggered at the node where the answer is found.
+It works when recursion returns back to the ancestor nodes.
 
-🌿 Inorder: [2, 3, 4, 5, 6, 7, 8]
-
-Let’s find k = 3
+It helps in EARLY TERMINATION so that the remaining tree is not traversed.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 1: current = 5
-→ Go left to 3
+🧪 Example: Find k = 3
 
-Step 2: current = 3
-→ Go left to 2
-
-Step 3: current = 2
-→ Left = null
-✅ Visit 2 → count = 1
-
-→ Right = null → Return to 3
-
-Tree view so far:
+Tree:
         5
-       /
-     [3]
-     /
-   [2] ← count = 1
+       / \
+      3   7
+     / \
+    2   4
+
+Inorder sequence → 2, 3, 4, 5, 6, 7, 8
+Answer = 4
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 4: current = 3
-✅ Visit 3 → count = 2
+Execution Flow (Call Stack)
 
-→ Go right to 4
+Step 1:
+inorder(5)
+→ calls inorder(3)
 
-Step 5: current = 4
-→ Left = null
-✅ Visit 4 → count = 3 🎯 FOUND
+Step 2:
+inorder(3)
+→ calls inorder(2)
 
-✅ 3rd Smallest = 4
+Step 3:
+inorder(2)
+left = -1
+visit → count = 1
+right = -1
+return -1
+
+Back to node 3
+left = -1 → condition NOT triggered
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟩 OUTPUT: Kth Smallest Element = 4
+Step 4:
+Visit node 3 → count = 2
+Call inorder(4)
+
+Step 5:
+inorder(4)
+left = -1
+visit → count = 3 ✅ FOUND
+return 4
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Now recursion starts returning upward
+
+Back to node 3:
+right call returned 4
+→ node 3 returns 4
+
+Back to node 5:
+left = 4
+
+Now this line executes:
+
+if (left != -1) return left;   // ✅ TRIGGERS HERE
+
+Effect:
+Node 5 will NOT:
+- Visit itself
+- Traverse right subtree (7, 8)
+
+Traversal stops early.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 Without this check:
+After finding 4, traversal would still visit:
+5 → 6 → 7 → 8  (unnecessary work)
+
+With this check:
+Time complexity improves to O(H + K)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 Summary:
+- Answer found at node 4
+- But early stop happens when recursion returns to its ancestors
+- This prevents extra traversal
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
+/*
 📊 TIME & SPACE COMPLEXITY
 
 ⏱ Time: O(H + K)
