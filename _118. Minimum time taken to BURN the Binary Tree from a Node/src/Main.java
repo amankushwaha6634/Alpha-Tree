@@ -2,93 +2,108 @@ import java.util.*;
 
 public class Main {
 
-    // 🌿 Node class for binary tree
+    // 🌳 Node class
     static class Node {
         int data;
         Node left, right;
-        Node(int data) {
-            this.data = data;
+
+        Node(int val) {
+            this.data = val;
         }
     }
 
-    // 📌 Function to create parent map and find the target node
-    static Node mapParents(Node root, Map<Node, Node> parentMap, int target, Node[] targetNode) {
+    // 🔁 Step 1: Map parents and find target node
+    static Node mapParents(Node root, Map<Node, Node> parentMap, int target) {
+
         Queue<Node> q = new LinkedList<>();
-        q.add(root);
+        q.offer(root);
+
+        Node targetNode = null;
 
         while (!q.isEmpty()) {
-            Node curr = q.poll();
-
-            // If current node matches the target value
-            if (curr.data == target) {
-                targetNode[0] = curr;
-            }
-
-            if (curr.left != null) {
-                parentMap.put(curr.left, curr);
-                q.add(curr.left);
-            }
-
-            if (curr.right != null) {
-                parentMap.put(curr.right, curr);
-                q.add(curr.right);
-            }
-        }
-        return targetNode[0];
-    }
-
-    // 🔥 Function to calculate minimum time to burn the tree from target node
-    static int burnTree(Node root, int target) {
-        Map<Node, Node> parentMap = new HashMap<>(); // child -> parent
-        Node[] targetNode = new Node[1]; // to store target node reference
-
-        // 📦 Step 1: Map parents and get the target node
-        Node targetRoot = mapParents(root, parentMap, target, targetNode);
-
-        // 📦 Step 2: Start BFS from target node
-        Queue<Node> q = new LinkedList<>();
-        Map<Node, Boolean> visited = new HashMap<>();
-
-        q.add(targetRoot);
-        visited.put(targetRoot, true);
-        int time = 0;
-
-        while (!q.isEmpty()) {
-            int size = q.size();
-            boolean burnedAny = false;
+            int size = q.size();   // Level-wise traversal
 
             for (int i = 0; i < size; i++) {
                 Node curr = q.poll();
 
-                // 🔥 Try to burn left child
-                if (curr.left != null && !visited.containsKey(curr.left)) {
-                    burnedAny = true;
-                    visited.put(curr.left, true);
-                    q.add(curr.left);
+                // Find target node
+                if (curr.data == target)
+                    targetNode = curr;
+
+                if (curr.left != null) {
+                    parentMap.put(curr.left, curr);
+                    q.offer(curr.left);
                 }
 
-                // 🔥 Try to burn right child
-                if (curr.right != null && !visited.containsKey(curr.right)) {
-                    burnedAny = true;
-                    visited.put(curr.right, true);
-                    q.add(curr.right);
+                if (curr.right != null) {
+                    parentMap.put(curr.right, curr);
+                    q.offer(curr.right);
+                }
+            }
+        }
+        return targetNode;
+    }
+
+    // 🔥 Step 2: Burn tree using BFS (levelSize = time units)
+    static int burnTree(Node root, int target) {
+
+        Map<Node, Node> parentMap = new HashMap<>();
+
+        // Get target reference + parent mapping
+        Node targetNode = mapParents(root, parentMap, target);
+
+        // BFS from target
+        Queue<Node> q = new LinkedList<>();
+        Set<Node> visited = new HashSet<>();
+
+        q.offer(targetNode);
+        visited.add(targetNode);
+
+        int time = 0;
+
+        while (!q.isEmpty()) {
+
+            int levelSize = q.size();   // Nodes burning at current time
+            boolean burned = false;
+
+            for (int i = 0; i < levelSize; i++) {
+
+                Node curr = q.poll();
+
+                // Burn left
+                if (curr.left != null && !visited.contains(curr.left)) {
+                    visited.add(curr.left);
+                    q.offer(curr.left);
+                    burned = true;
                 }
 
-                // 🔥 Try to burn parent
-                if (parentMap.containsKey(curr) && !visited.containsKey(parentMap.get(curr))) {
-                    burnedAny = true;
-                    visited.put(parentMap.get(curr), true);
-                    q.add(parentMap.get(curr));
+                // Burn right
+                if (curr.right != null && !visited.contains(curr.right)) {
+                    visited.add(curr.right);
+                    q.offer(curr.right);
+                    burned = true;
+                }
+
+                // Burn parent
+                if (parentMap.containsKey(curr)) {
+                    Node parent = parentMap.get(curr);
+                    if (!visited.contains(parent)) {
+                        visited.add(parent);
+                        q.offer(parent);
+                        burned = true;
+                    }
                 }
             }
 
-            if (burnedAny) time++; // ⏱️ Increment time only if fire spreads
+            // Increase time only if fire spread
+            if (burned) time++;
         }
 
         return time;
     }
 
     public static void main(String[] args) {
+
         /*
                   1
                 /   \
@@ -97,8 +112,6 @@ public class Main {
              4   5     7
                         \
                          8
-
-        Suppose target = 5
         */
 
         Node root = new Node(1);
@@ -110,10 +123,77 @@ public class Main {
         root.right.right.right = new Node(8);
 
         int target = 5;
-        int time = burnTree(root, target);
-        System.out.println("🔥 Minimum time to burn the tree: " + time);
+
+        System.out.println("🔥 Time to burn tree: " + burnTree(root, target));
     }
 }
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 SHORT NOTES: Burn Binary Tree from Target
+
+📌 Goal:
+Find the minimum time required to burn the entire tree
+if fire starts from a given target node.
+
+🔥 Fire spreads to:
+- Left child
+- Right child
+- Parent
+
+Each spread takes 1 unit time.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 Key Idea:
+Binary tree nodes do not have parent pointers.
+So first we create a mapping:
+child → parent
+
+Then we perform BFS starting from the target node.
+Each BFS level represents 1 unit of time.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ Steps:
+
+Step 1: Map Parents (BFS)
+- Traverse tree level-wise
+- Store parent of each node in a HashMap
+- Also find reference of target node
+
+Step 2: BFS from Target
+- Add target node to queue
+- Mark it visited
+- For each level:
+    • Burn left child (if not visited)
+    • Burn right child (if not visited)
+    • Burn parent (if not visited)
+- If fire spreads in this level → time++
+
+Step 3:
+When queue becomes empty → entire tree is burned
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 Data Structures Used:
+- HashMap<Node, Node> → parentMap
+- HashMap<Node, Boolean> or Set<Node> → visited
+- Queue<Node> → BFS traversal
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱️ Time Complexity: O(N)
+- Parent mapping: O(N)
+- Burning BFS: O(N)
+
+📦 Space Complexity: O(N)
+- Parent map + visited + queue
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 Pattern Insight:
+This problem is equivalent to:
+→ BFS on an **undirected graph**
+where each node connects to:
+    left, right, parent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
 
 /*
 🧪 DRY RUN: Burn Binary Tree from Node 5

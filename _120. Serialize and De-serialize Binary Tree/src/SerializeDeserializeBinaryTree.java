@@ -2,297 +2,246 @@ import java.util.*;
 
 public class SerializeDeserializeBinaryTree {
 
-    // 🌳 Node class representing each element in the Binary Tree
+    // 🌳 Node class
     static class Node {
-        int val;          // value stored in node
-        Node left, right; // left and right child pointers
+        int val;
+        Node left, right;
 
         Node(int x) {
             val = x;
         }
     }
 
-    // 🔐 SERIALIZE FUNCTION: Converts Binary Tree into a comma-separated String
+    // =========================================================
+    // 🔐 SERIALIZE: Convert Tree → String (Level Order using size)
+    // =========================================================
     public static String serialize(Node root) {
-        // 🛑 If tree is empty, return empty string
+
+        // 🛑 Empty tree
         if (root == null) return "";
 
-        // 🌐 Use queue for Level Order Traversal (BFS)
         Queue<Node> queue = new LinkedList<>();
-        StringBuilder sb = new StringBuilder(); // to build the result string
+        StringBuilder sb = new StringBuilder();
 
-        // 🔁 Start from root
-        queue.add(root);
+        queue.offer(root);
 
+        // 🔁 Level Order Traversal
         while (!queue.isEmpty()) {
-            Node node = queue.poll(); // 🟢 Remove current node
 
-            if (node == null) {
-                sb.append("null,"); // ⛔ Mark null child explicitly
-                continue;
+            int levelSize = queue.size();  // 📏 Nodes at current level
+
+            for (int i = 0; i < levelSize; i++) {
+
+                Node node = queue.poll();
+
+                // If node is null → mark explicitly
+                if (node == null) {
+                    sb.append("null,");
+                    continue;
+                }
+
+                // Append node value
+                sb.append(node.val).append(",");
+
+                // Add children (even if null)
+                queue.offer(node.left);
+                queue.offer(node.right);
             }
-
-            // level order traversal ->
-
-            // ✅ Append current node’s value
-            sb.append(node.val).append(",");
-
-            // 👈 Add left and 👉 right children (can be null)
-            queue.add(node.left);
-            queue.add(node.right);
         }
 
-        // 🧹 Remove the trailing comma at the end
+        // Remove last comma
         sb.setLength(sb.length() - 1);
 
-        // 🔁 Return final serialized string
         return sb.toString();
     }
 
-    // 🔓 DESERIALIZE FUNCTION: Converts String back to Binary Tree
+
+/*
+🧪 DRY RUN: Serialization
+
+Tree:
+        1
+       / \
+      2   3
+         / \
+        4   5
+
+Level 0: [1]
+Result: 1,
+
+Level 1: [2,3]
+Result: 1,2,3,
+
+Level 2: [null,null,4,5]
+Result: 1,2,3,null,null,4,5,
+
+Level 3: [null,null,null,null]
+Result:
+1,2,3,null,null,4,5,null,null,null,null
+
+Final Serialized String:
+"1,2,3,null,null,4,5,null,null,null,null"
+*/
+
+    // =========================================================
+    // 🔓 DESERIALIZE: Convert String → Tree (Level Order using size)
+    // =========================================================
     public static Node deserialize(String data) {
-        // 🛑 Edge case: if string is empty, return null
+
         if (data.isEmpty()) return null;
 
-        // 🔍 Split the input string by commas to get each node value
         String[] values = data.split(",");
 
-        // 🌱 The first value is always the root
+        // First value is root
         Node root = new Node(Integer.parseInt(values[0]));
+
         Queue<Node> queue = new LinkedList<>();
-        queue.add(root);
+        queue.offer(root);
 
-        int i = 1; // 📌 Index for scanning through the values[]
+        int i = 1;
 
-        // 🔁 Level-order reconstruction
+        // 🔁 Rebuild tree level by level
         while (!queue.isEmpty() && i < values.length) {
-            Node parent = queue.poll(); // Current parent node
 
-            // 👈 Create left child if not "null"
-            if (!values[i].equals("null")) {
-                parent.left = new Node(Integer.parseInt(values[i]));
-                queue.add(parent.left); // Add left child to queue
-            }
-            i++; // Move to next value
+            int levelSize = queue.size(); // Parents at this level
 
-            // 👉 Create right child if exists and not "null"
-            if (i < values.length && !values[i].equals("null")) {
-                parent.right = new Node(Integer.parseInt(values[i]));
-                queue.add(parent.right); // Add right child to queue
+            for (int j = 0; j < levelSize && i < values.length; j++) {
+
+                Node parent = queue.poll();
+
+                // Left child
+                if (!values[i].equals("null")) {
+                    parent.left = new Node(Integer.parseInt(values[i]));
+                    queue.offer(parent.left);
+                }
+                i++;
+
+                // Right child
+                if (i < values.length && !values[i].equals("null")) {
+                    parent.right = new Node(Integer.parseInt(values[i]));
+                    queue.offer(parent.right);
+                }
+                i++;
             }
-            i++; // Move to next value
         }
 
-        // 🌳 Return root of reconstructed tree
         return root;
     }
 
-    // 🖨️ Utility function to print tree in Inorder traversal for verification
+
+
+/*
+🧪 DRY RUN: Deserialization
+
+Input:
+1,2,3,null,null,4,5,null,null,null,null
+
+Step 1:
+Create root = 1
+Queue = [1]
+
+Step 2:
+Parent = 1
+→ left = 2
+→ right = 3
+Queue = [2,3]
+
+Step 3:
+Parent = 2
+→ left = null
+→ right = null
+
+Step 4:
+Parent = 3
+→ left = 4
+→ right = 5
+
+Final Tree:
+        1
+       / \
+      2   3
+         / \
+        4   5
+*/
+
+
+    // 🖨️ Inorder (verification)
     public static void printInorder(Node root) {
         if (root == null) return;
-
-        printInorder(root.left);       // 🔽 Traverse left
-        System.out.print(root.val + " "); // 🎯 Print node
-        printInorder(root.right);      // 🔼 Traverse right
+        printInorder(root.left);
+        System.out.print(root.val + " ");
+        printInorder(root.right);
     }
 
-    // 🧪 MAIN FUNCTION TO TEST
+    // =========================================================
+    // 🧪 MAIN
+    // =========================================================
     public static void main(String[] args) {
+
         /*
-               1
-              / \
-             2   3
-                / \
-               4   5
+                1
+               / \
+              2   3
+                 / \
+                4   5
         */
+
         Node root = new Node(1);
         root.left = new Node(2);
         root.right = new Node(3);
         root.right.left = new Node(4);
         root.right.right = new Node(5);
 
-        // 🔐 Convert tree to string
+        // Serialize
         String serialized = serialize(root);
-        System.out.println("🔐 Serialized Tree: " + serialized);
-        // Output: "1,2,3,null,null,4,5,null,null,null,null"
+        System.out.println("Serialized: " + serialized);
 
-        // 🔓 Convert string back to tree
-        Node deserializedRoot = deserialize(serialized);
+        // Deserialize
+        Node newRoot = deserialize(serialized);
 
-        // 🔍 Print inorder traversal of reconstructed tree
-        System.out.print("📤 Inorder of Deserialized Tree: ");
-        printInorder(deserializedRoot); // Should match original tree
-        // Output: 2 1 4 3 5
+        System.out.print("Inorder after deserialization: ");
+        printInorder(newRoot);
     }
 }
 
 /*
-🎯 Goal: Convert Binary Tree → String using Level Order (BFS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 SHORT NOTES: Serialize & Deserialize (Level Order)
 
-Initial Tree:
-        1
-       / \
-      2   3
-         / \
-        4   5
+📌 Goal:
+Convert Binary Tree ↔ String using BFS.
 
-Queue: [1]
-StringBuilder: ""
+📘 Concept:
+Use Level Order Traversal and explicitly store nulls.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll 1 → Append 1 to result
-→ Add left = 2, right = 3 to queue
+Serialization:
+- Traverse level by level
+- Append value
+- If node is null → append "null"
+- Push left & right for each node
 
-Queue: [2, 3]
-Result: "1,"
+Deserialization:
+- Read values sequentially
+- Rebuild tree level by level
+- Each parent gets two children
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll 2 → Append 2 to result
-→ Add left = null, right = null
+💡 Why levelSize?
+→ Keeps traversal strictly level-wise
+→ Same BFS pattern used in:
+   - Burn Tree
+   - Distance K
+   - Level Order Traversal
 
-Queue: [3, null, null]
-Result: "1,2,"
+📦 Data Structures:
+- Queue<Node>
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll 3 → Append 3 to result
-→ Add left = 4, right = 5
-
-Queue: [null, null, 4, 5]
-Result: "1,2,3,"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll null → Append "null"
-
-Queue: [null, 4, 5]
-Result: "1,2,3,null,"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll null → Append "null"
-
-Queue: [4, 5]
-Result: "1,2,3,null,null,"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll 4 → Append 4
-→ Add left = null, right = null
-
-Queue: [5, null, null]
-Result: "1,2,3,null,null,4,"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll 5 → Append 5
-→ Add left = null, right = null
-
-Queue: [null, null, null, null]
-Result: "1,2,3,null,null,4,5,"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔁 Poll null → Append "null"
-🔁 Poll null → Append "null"
-🔁 Poll null → Append "null"
-🔁 Poll null → Append "null"
-
-Queue: []
-Result: "1,2,3,null,null,4,5,null,null,null,null"
-
-✅ Final Serialized Output:
-"1,2,3,null,null,4,5,null,null,null,null"
-*/
-
-
-/*
-🎯 Goal: Convert Serialized String → Tree (Level Order)
-
-Input:
-"1,2,3,null,null,4,5,null,null,null,null"
-
-values = [1,2,3,null,null,4,5,null,null,null,null]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 1:
-➤ Create root = Node(1)
-➤ Queue = [1]
-i = 1
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 2:
-➤ Poll 1 from queue
-➤ values[1] = 2 → left = Node(2)
-➤ values[2] = 3 → right = Node(3)
-Queue = [2, 3]
-i = 3
-
-Tree so far:
-        1
-       / \
-      2   3
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 3:
-➤ Poll 2 from queue
-➤ values[3] = null → left = null
-➤ values[4] = null → right = null
-Queue = [3]
-i = 5
-
-Tree so far:
-        1
-       / \
-      2   3
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 4:
-➤ Poll 3 from queue
-➤ values[5] = 4 → left = Node(4)
-➤ values[6] = 5 → right = Node(5)
-Queue = [4, 5]
-i = 7
-
-Tree so far:
-        1
-       / \
-      2   3
-         / \
-        4   5
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 5:
-➤ Poll 4 → values[7,8] = null → both children = null
-➤ Poll 5 → values[9,10] = null → both children = null
-
-Queue: []
-i = 11 (Done)
-
-✅ Final Reconstructed Tree:
-        1
-       / \
-      2   3
-         / \
-        4   5
-*/
-
-
-
-/*
-✅ Serialization (Level Order / BFS)
-------------------------------------
 🕒 Time Complexity: O(N)
-- Each node is visited once during level order traversal.
-- N is the number of nodes in the binary tree.
-
-📦 Space Complexity: O(N)
-- Queue holds at most N/2 nodes at the last level in the worst case.
-- The resulting string also takes O(N) space.
-
-
-✅ Deserialization (Level Order / BFS)
-------------------------------------
-🕒 Time Complexity: O(N)
-- We loop through each value once in the array.
-- For each value, we create a node and assign its children.
-
-📦 Space Complexity: O(N)
-- Queue holds nodes to be linked; at most N/2 in worst case.
-- Tree of N nodes is reconstructed using new memory space.
+🧠 Space Complexity: O(N)
 */
+
+
+
+
+
+
 
