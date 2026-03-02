@@ -19,7 +19,7 @@ public class NodesAtKDistance {
         if (root == null) return;
 
         Queue<Node> q = new LinkedList<>();
-        q.offer(root);
+        q.add(root);
 
         while (!q.isEmpty()) {
             int levelSize = q.size();  // Number of nodes at current level
@@ -30,13 +30,13 @@ public class NodesAtKDistance {
                 // Map left child to its parent
                 if (curr.left != null) {
                     parentMap.put(curr.left, curr);
-                    q.offer(curr.left);
+                    q.add(curr.left);
                 }
 
                 // Map right child to its parent
                 if (curr.right != null) {
                     parentMap.put(curr.right, curr);
-                    q.offer(curr.right);
+                    q.add(curr.right);
                 }
             }
         }
