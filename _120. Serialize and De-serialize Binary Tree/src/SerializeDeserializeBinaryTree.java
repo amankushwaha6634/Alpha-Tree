@@ -12,51 +12,62 @@ public class SerializeDeserializeBinaryTree {
         }
     }
 
-    // =========================================================
-    // 🔐 SERIALIZE: Convert Tree → String (Level Order using size)
-    // =========================================================
+// =========================================================
+// 🔐 SERIALIZE: Convert Binary Tree → String (Level Order BFS)
+// =========================================================
     public static String serialize(Node root) {
 
-        // 🛑 Empty tree
+        // 🛑 If tree is empty, return empty string
         if (root == null) return "";
 
+        // 📦 Queue for Level Order Traversal (BFS)
         Queue<Node> queue = new LinkedList<>();
+
+        // 🧵 StringBuilder to efficiently build the serialized string
         StringBuilder sb = new StringBuilder();
 
+        // 🌱 Start BFS from root
         queue.offer(root);
 
-        // 🔁 Level Order Traversal
+        // 🔁 Continue until all levels are processed
         while (!queue.isEmpty()) {
 
-            int levelSize = queue.size();  // 📏 Nodes at current level
+            // 📏 Number of nodes at current level
+            // (Used to process tree level-by-level)
+            int levelSize = queue.size();
 
+            // Process all nodes in this level
             for (int i = 0; i < levelSize; i++) {
 
+                // 🟢 Remove current node from queue
                 Node node = queue.poll();
 
-                // If node is null → mark explicitly
+                // ❗ If node is null:
+                // We must store it explicitly to preserve tree structure
                 if (node == null) {
                     sb.append("null,");
-                    continue;
+                    continue; // No children to add
                 }
 
-                // Append node value
+                // ✅ Append current node value
                 sb.append(node.val).append(",");
 
-                // Add children (even if null)
+                // 📥 Add left child (can be null)
                 queue.offer(node.left);
+
+                // 📤 Add right child (can be null)
                 queue.offer(node.right);
             }
         }
 
-        // Remove last comma
+        // 🧹 Remove the last extra comma
         sb.setLength(sb.length() - 1);
 
+        // 🔁 Return final serialized string
         return sb.toString();
     }
 
-
-/*
+    /*
 🧪 DRY RUN: Serialization
 
 Tree:
