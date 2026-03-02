@@ -104,9 +104,11 @@ Final Serialized String:
         if (data.isEmpty()) return null;
 
         // 🔍 Split string into individual values
-        String[] values = data.split(",");
+        String[] values = data.split(",");  // [ 1,2,3,null,null,4,5,null,null,null,null ]
 
         // 🌱 First value represents the root node
+        //        1
+        //       / \
         Node root = new Node(Integer.parseInt(values[0]));
 
         // 📦 Queue for level-order reconstruction
