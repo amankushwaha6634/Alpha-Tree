@@ -14,22 +14,30 @@ class Node {
 
 public class NodesAtKDistance {
 
-    // 🔁 Step 1: Map each node to its parent
+    // 🔁 Step 1: Map each node to its parent (Level-wise BFS)
     private static void mapParents(Node root, Map<Node, Node> parentMap) {
+        if (root == null) return;
+
         Queue<Node> q = new LinkedList<>();
-        q.add(root);
+        q.offer(root);
 
         while (!q.isEmpty()) {
-            Node curr = q.poll();
+            int levelSize = q.size();  // Number of nodes at current level
 
-            if (curr.left != null) {
-                parentMap.put(curr.left, curr);
-                q.add(curr.left);
-            }
+            for (int i = 0; i < levelSize; i++) {
+                Node curr = q.poll();
 
-            if (curr.right != null) {
-                parentMap.put(curr.right, curr);
-                q.add(curr.right);
+                // Map left child to its parent
+                if (curr.left != null) {
+                    parentMap.put(curr.left, curr);
+                    q.offer(curr.left);
+                }
+
+                // Map right child to its parent
+                if (curr.right != null) {
+                    parentMap.put(curr.right, curr);
+                    q.offer(curr.right);
+                }
             }
         }
     }
