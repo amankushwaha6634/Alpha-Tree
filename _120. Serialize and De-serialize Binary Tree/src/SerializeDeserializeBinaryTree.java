@@ -113,7 +113,7 @@ Final Serialized String:
 
         // 📦 Queue for level-order reconstruction
         Queue<Node> queue = new LinkedList<>();
-        queue.offer(root);
+        queue.offer(root);  // [ 1 ]
 
         // 📌 Index to traverse the values array
         int i = 1;
