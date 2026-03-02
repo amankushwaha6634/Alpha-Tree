@@ -17,19 +17,19 @@ public class NodesAtKDistance {
     // 🔁 Step 1: Map each node to its parent
     private static void mapParents(Node root, Map<Node, Node> parentMap) {
         Queue<Node> q = new LinkedList<>();
-        q.offer(root);
+        q.add(root);
 
         while (!q.isEmpty()) {
             Node curr = q.poll();
 
             if (curr.left != null) {
                 parentMap.put(curr.left, curr);
-                q.offer(curr.left);
+                q.add(curr.left);
             }
 
             if (curr.right != null) {
                 parentMap.put(curr.right, curr);
-                q.offer(curr.right);
+                q.add(curr.right);
             }
         }
     }
@@ -38,9 +38,28 @@ public class NodesAtKDistance {
     public static List<Integer> printNodesAtDistanceK(Node root, Node target, int K) {
         Map<Node, Node> parentMap = new HashMap<>();
         mapParents(root, parentMap); // 🔁 Fill parent mapping
+        /*
+        🧠 DRY RUN:
+        Tree:
+                     3
+                    / \
+                   5   1
+                  / \  / \
+                 6  2 0  8
+                   / \
+                  7   4
+                parentMap:
+                6 → 5
+                2 → 5
+                5 → 3
+                1 → 3
+                0 → 1
+                8 → 1
+                7 → 2
+                4 → 2   */
 
         Queue<Node> q = new LinkedList<>();
-        q.offer(target);             // 🎯 Start BFS from target
+        q.add(target);             // 🎯 Start BFS from target
         Set<Node> visited = new HashSet<>();
         visited.add(target);         // ✅ Mark target as visited
 
@@ -61,6 +80,7 @@ public class NodesAtKDistance {
         Target = 5, K = 2
 
         Initial Queue = [5]
+        visited = [5]
         currentLevel = 0
 
         --> Process level 0:
