@@ -94,51 +94,65 @@ Final Serialized String:
 "1,2,3,null,null,4,5,null,null,null,null"
 */
 
-    // =========================================================
-    // 🔓 DESERIALIZE: Convert String → Tree (Level Order using size)
-    // =========================================================
+
+// =========================================================
+// 🔓 DESERIALIZE: Convert String → Binary Tree (Level Order BFS)
+// =========================================================
     public static Node deserialize(String data) {
 
+        // 🛑 If input string is empty → tree is empty
         if (data.isEmpty()) return null;
 
+        // 🔍 Split string into individual values
         String[] values = data.split(",");
 
-        // First value is root
+        // 🌱 First value represents the root node
         Node root = new Node(Integer.parseInt(values[0]));
 
+        // 📦 Queue for level-order reconstruction
         Queue<Node> queue = new LinkedList<>();
         queue.offer(root);
 
+        // 📌 Index to traverse the values array
         int i = 1;
 
-        // 🔁 Rebuild tree level by level
+        // 🔁 Rebuild the tree level by level
         while (!queue.isEmpty() && i < values.length) {
 
-            int levelSize = queue.size(); // Parents at this level
+            // 📏 Number of parent nodes at current level
+            int levelSize = queue.size();
 
+            // Process each parent in this level
             for (int j = 0; j < levelSize && i < values.length; j++) {
 
+                // 🟢 Current parent node
                 Node parent = queue.poll();
 
-                // Left child
+                // -------------------------------------------------
+                // 👈 Create LEFT child
+                // -------------------------------------------------
+                // If value is not "null", create node and attach
                 if (!values[i].equals("null")) {
                     parent.left = new Node(Integer.parseInt(values[i]));
-                    queue.offer(parent.left);
+                    queue.offer(parent.left); // Add for future processing
                 }
-                i++;
+                i++; // Move to next value
 
-                // Right child
+                // -------------------------------------------------
+                // 👉 Create RIGHT child
+                // -------------------------------------------------
+                // Check boundary and ensure value is not "null"
                 if (i < values.length && !values[i].equals("null")) {
                     parent.right = new Node(Integer.parseInt(values[i]));
-                    queue.offer(parent.right);
+                    queue.offer(parent.right); // Add for future processing
                 }
-                i++;
+                i++; // Move to next value
             }
         }
 
+        // 🌳 Return reconstructed tree root
         return root;
     }
-
 
 
 /*
