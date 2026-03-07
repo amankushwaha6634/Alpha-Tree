@@ -149,7 +149,6 @@ Rule:
     Find inorder predecessor (rightmost of left subtree)
     If predecessor.right == NULL → create thread
     Else → remove thread and print
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Step 1: curr = 4
