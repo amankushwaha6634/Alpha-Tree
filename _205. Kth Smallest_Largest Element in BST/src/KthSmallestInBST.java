@@ -39,7 +39,8 @@ public class KthSmallestInBST {
         if (count == k) return node.data;
 
         // 3️⃣ Traverse right subtree (larger elements)
-        return inorder(node.right, k);
+        int right = inorder(node.right, k);
+        return right;
     }
 
     // 🔧 Build example BST
