@@ -109,3 +109,94 @@ Structure of the tree with allowed range at each node:
 👉 Final Verdict: ✅ This tree **is a valid BST**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TIME & SPACE COMPLEXITY ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱ TIME COMPLEXITY → O(N)
+
+Where:
+N = total number of nodes in the tree
+
+Reason:
+- The algorithm visits each node exactly once.
+- At every node we perform only constant work:
+      1️⃣ Check if node.data lies within the allowed range (min, max)
+      2️⃣ Recursively check left subtree
+      3️⃣ Recursively check right subtree
+
+- Since every node is processed once → total operations = N.
+
+Therefore:
+Time Complexity = O(N)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 SPACE COMPLEXITY → O(H)
+
+Where:
+H = height of the tree
+
+Reason:
+- The space is used by the recursion call stack.
+- At any time, the maximum number of recursive calls
+  on the stack equals the height of the tree.
+
+Case 1️⃣ Balanced Tree
+
+Example:
+        10
+       /  \
+      5    15
+     / \   / \
+    2   7 12 20
+
+Height:
+H ≈ log N
+
+So:
+Space Complexity = O(log N)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Case 2️⃣ Skewed Tree (Worst Case)
+
+Example:
+10
+  \
+   15
+     \
+      20
+        \
+         25
+
+Height:
+H = N
+
+So:
+Space Complexity = O(N)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 FINAL COMPLEXITY SUMMARY
+
+Time Complexity  → O(N)
+Space Complexity → O(H)
+
+Balanced Tree Space → O(log N)
+Skewed Tree Space   → O(N)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 INTERVIEW ONE-LINE ANSWER
+
+"The algorithm visits each node exactly once,
+so the time complexity is O(N). The recursion stack
+uses space proportional to the height of the tree,
+so the space complexity is O(H), which is O(log N)
+for a balanced tree and O(N) in the worst case."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
