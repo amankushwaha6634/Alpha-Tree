@@ -20,6 +20,10 @@ public class Construct_a_Binary_Tree_from_Preorder_and_Inorder_Traversal {
         for (int i = 0; i < inorder.length; i++) {
             inMap.put(inorder[i], i);
         }
+        /*
+        ➡ Inorder:  [9, 3, 15, 20, 7] → (Left, Root, Right)
+        - `inorderMap` = {9:0, 3:1, 15:2, 20:3, 7:4}
+        */
         return build(preorder, 0, inorder.length - 1, inMap);
     }
 
