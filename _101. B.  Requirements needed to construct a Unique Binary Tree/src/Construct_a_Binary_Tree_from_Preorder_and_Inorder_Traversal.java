@@ -180,79 +180,47 @@ Reconstructed Binary Tree:
 */
 
 
-/*
-🧠 Goal: Reconstruct Binary Tree from:
-Preorder = [3, 9, 20, 15, 7]
-Inorder  = [9, 3, 15, 20, 7]
 
-📍 Step-by-step Construction:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔸 Step 1: Build root node from preorder[0] = 3
-inorderIndex(3) = 1
-
-➡ Left Subtree: inorder[0 to 0] → [9]
-➡ Right Subtree: inorder[2 to 4] → [15, 20, 7]
-
-Tree so far:
-       3
-      / \
-  ( ? )  ( ? )
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔸 Step 2: Build left child of 3 using preorder[1] = 9
-inorderIndex(9) = 0 → no left/right children
-
-Tree so far:
-       3
-      / \
-     9   ?
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔸 Step 3: Build right child of 3 using preorder[2] = 20
-inorderIndex(20) = 3
-
-➡ Left Subtree: inorder[2 to 2] → [15]
-➡ Right Subtree: inorder[4 to 4] → [7]
-
-Tree so far:
-       3
-      / \
-     9   20
-         / \
-     ( ? ) ( ? )
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔸 Step 4: Build left child of 20 using preorder[3] = 15
-inorderIndex(15) = 2 → no children
-
-Tree so far:
-       3
-      / \
-     9   20
-         / \
-       15   ?
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔸 Step 5: Build right child of 20 using preorder[4] = 7
-inorderIndex(7) = 4 → no children
-
-✅ Final Constructed Tree:
-       3
-      / \
-     9   20
-         / \
-       15   7
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 Index Tracking:
-preIndex at each step → [0, 1, 2, 3, 4]
-Each index corresponds to a root built at that stage
-
-🕒 Time Complexity: O(N)
-→ Each node is created once and map lookup is O(1)
-
-📦 Space Complexity: O(N)
-→ Recursion stack + HashMap storing inorder indices
-
-*/
+/**
+ * ⏱️ Time Complexity: O(N)
+ *
+ * Explanation:
+ * - Each node from the preorder array is processed exactly once.
+ * - For every node:
+ *      1. We create a Node object → O(1)
+ *      2. We lookup its index in the inorder array using HashMap → O(1)
+ *      3. We recursively build left and right subtree.
+ *
+ * - Since there are N nodes in the tree and each node is handled once,
+ *   the total time complexity becomes:
+ *
+ *      O(N)
+ *
+ * -------------------------------------------------------
+ *
+ * 📦 Space Complexity: O(N)
+ *
+ * There are two contributors:
+ *
+ * 1️⃣ HashMap (inMap)
+ * - Stores all elements of inorder traversal.
+ * - Size = N
+ * - Space = O(N)
+ *
+ * 2️⃣ Recursion Stack
+ * - In the worst case (skewed tree), recursion depth can reach N.
+ * - Example: tree like 1 → 2 → 3 → 4 → 5
+ * - Space = O(N)
+ *
+ * Total Space Complexity:
+ *
+ *      O(N) + O(N) ≈ O(N)
+ *
+ * -------------------------------------------------------
+ *
+ * ✔ Final Complexity
+ *
+ * Time  : O(N)
+ * Space : O(N)
+ */
