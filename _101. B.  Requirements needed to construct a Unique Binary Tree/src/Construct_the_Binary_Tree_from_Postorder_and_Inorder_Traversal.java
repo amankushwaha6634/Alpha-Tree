@@ -62,7 +62,6 @@ public class Construct_the_Binary_Tree_from_Postorder_and_Inorder_Traversal  {
     }
 }
 
-
 /*
 🧠 DRY RUN: Build Binary Tree from Postorder + Inorder
 
@@ -71,92 +70,167 @@ Given:
 ➡ Inorder:   [9, 3, 15, 20, 7] → (Left, Root, Right)
 
 📦 Supporting Data Structures:
-- `postIndex` = 4 (starts from end of postorder)
+- `postIndex` = 4 (starts from last element of postorder)
 - `inorderMap` = {9:0, 3:1, 15:2, 20:3, 7:4}
-- Recurse using postIndex and inorder bounds
+- Recursively build tree using inorder boundaries
+
+⚠ Important:
+Since Postorder is (Left → Right → Root),
+we traverse it **in reverse** → (Root → Right → Left)
+
+So recursion order becomes:
+1️⃣ Build RIGHT subtree
+2️⃣ Build LEFT subtree
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔹 Step 1: buildSubTree(0, 4)
+🔹 Step 1: build(0, 4)
 
 postIndex = 4 → postorder[4] = 3 → 🪵 root = 3
-inorderMap[3] = 1
+inorderIndex(3) = 1
 
+↙ Left Inorder: inorder[0 to 0] → [9]
 ↘ Right Inorder: inorder[2 to 4] → [15, 20, 7]
-↙ Left Inorder:  inorder[0 to 0] → [9]
 
 🌳 Tree so far:
-       3
-     /   \
- ( ? )   ( ? )
+        3
+
+Data snapshot:
+- postIndex → 3
+- Build RIGHT subtree first
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔹 Step 2: buildSubTree(2, 4)
+🔹 Step 2: build(2, 4)
 
 postIndex = 3 → postorder[3] = 20 → 🪵 root = 20
-inorderMap[20] = 3
+inorderIndex(20) = 3
 
+↙ Left Inorder: inorder[2 to 2] → [15]
 ↘ Right Inorder: inorder[4 to 4] → [7]
-↙ Left Inorder:  inorder[2 to 2] → [15]
 
 🌳 Tree so far:
-       3
-     /   \
-    ?     20
-         /  \
-     ( ? ) ( ? )
+        3
+         \
+         20
+
+Data snapshot:
+- postIndex → 2
+- Build RIGHT subtree first
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔹 Step 3: buildSubTree(4, 4)
+🔹 Step 3: build(4, 4)
 
 postIndex = 2 → postorder[2] = 7 → 🪵 root = 7
-inorderMap[7] = 4
+inorderIndex(7) = 4
 
-🛑 No children (single element)
+🛑 No children
 
 🌳 Tree so far:
-       3
-     /   \
-    ?     20
-         /  \
-       ?     7
+        3
+         \
+         20
+            \
+             7
+
+Data snapshot:
+- postIndex → 1
+- Build LEFT subtree of 20
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔹 Step 4: buildSubTree(2, 2)
+🔹 Step 4: build(2, 2)
 
 postIndex = 1 → postorder[1] = 15 → 🪵 root = 15
-inorderMap[15] = 2
+inorderIndex(15) = 2
 
 🛑 No children
 
 🌳 Tree so far:
-       3
-     /   \
-    ?     20
-         /  \
-       15     7
+        3
+         \
+         20
+        /  \
+       15   7
+
+Data snapshot:
+- postIndex → 0
+- Build LEFT subtree of 3
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔹 Step 5: buildSubTree(0, 0)
+🔹 Step 5: build(0, 0)
 
 postIndex = 0 → postorder[0] = 9 → 🪵 root = 9
-inorderMap[9] = 0
+inorderIndex(9) = 0
 
 🛑 No children
 
-🌳 Final Constructed Tree:
-       3
-     /   \
-    9     20
-         /  \
-       15    7
+🌳 Final Tree:
+        3
+       / \
+      9   20
+          / \
+        15   7
+
+Data snapshot:
+- postIndex → -1 (all nodes processed)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Final Output:
-Inorder Traversal = 9 3 15 20 7
+✅ FINAL OUTPUT:
+Reconstructed Binary Tree:
+        3
+       / \
+      9   20
+          / \
+        15   7
 
 📈 Time Complexity: O(N)
-→ Each node visited once, map lookup is O(1)
+→ Each node processed once
 
 📦 Space Complexity: O(N)
-→ Recursion stack + HashMap
+→ HashMap + recursion stack
 */
+
+
+/**
+ * ⏱️ Time Complexity: O(N)
+ *
+ * Explanation:
+ * - Each node from the postorder array is processed exactly once.
+ * - For every node:
+ *      1. Create Node object → O(1)
+ *      2. Lookup its index in inorder using HashMap → O(1)
+ *      3. Recursively construct left and right subtrees
+ *
+ * Since there are N nodes:
+ *
+ *      Time Complexity = O(N)
+ *
+ * -------------------------------------------------------
+ *
+ * 📦 Space Complexity: O(N)
+ *
+ * Contributors:
+ *
+ * 1️⃣ HashMap
+ * - Stores inorder value → index
+ * - Size = N
+ *
+ * 2️⃣ Recursion Stack
+ * - Worst case (skewed tree) recursion depth = N
+ *
+ * Example skewed tree:
+ * 1
+ *  \
+ *   2
+ *    \
+ *     3
+ *
+ * Total Space Complexity:
+ *
+ *      O(N) + O(N) ≈ O(N)
+ *
+ * -------------------------------------------------------
+ *
+ * ✔ Final Complexity
+ *
+ * Time  : O(N)
+ * Space : O(N)
+ */
