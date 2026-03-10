@@ -14,13 +14,19 @@ public class Construct_the_Binary_Tree_from_Postorder_and_Inorder_Traversal  {
     static int postIndex;
 
     public static Node buildTree(int[] inorder, int[] postorder) {
-        postIndex = postorder.length - 1;
+        postIndex = postorder.length - 1; // 4
 
         // 🗺️ Map to store inorder value -> index for O(1) lookup
         Map<Integer, Integer> inMap = new HashMap<>();
         for (int i = 0; i < inorder.length; i++) {
             inMap.put(inorder[i], i);
         }
+
+        /*
+        ➡ Postorder: [9, 15, 7, 20, 3] → (Left, Right, Root)
+        ➡ Inorder:   [9, 3, 15, 20, 7] → (Left, Root, Right)
+
+        - `inorderMap` = {9:0, 3:1, 15:2, 20:3, 7:4}  */
 
         return build(postorder, 0, inorder.length - 1, inMap);
     }
