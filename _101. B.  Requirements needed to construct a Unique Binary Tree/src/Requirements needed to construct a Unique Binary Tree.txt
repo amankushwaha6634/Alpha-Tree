@@ -24,7 +24,9 @@
 
      ✅ Both trees give same traversals, but different shapes.
      ❌ Hence, NOT unique
+*/
 
+/*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🟢 (2) Inorder + Preorder → ✅ YES, Unique Binary Tree Possible
 
@@ -68,6 +70,63 @@
                 /  \
               15    7
 
+
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟢 (3) Inorder + Postorder → ✅ YES, Unique Binary Tree Possible
+
+   ✅ Postorder: Left → Right → Root
+   ✅ Inorder:   Left → Root → Right
+
+   🔍 Steps:
+   1. Pick root from **postorder** (last element).
+   2. Find root index in **inorder**:
+       → Left of root in inorder → left subtree
+       → Right of root in inorder → right subtree
+   3. Recursively apply steps on subarrays.
+
+   ⚠ Important Rule:
+   Since we read **postorder from the end**, recursion order becomes:
+
+       1️⃣ Build RIGHT subtree first
+       2️⃣ Build LEFT subtree
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔁 Example:
+
+   🔸 Postorder = [9, 15, 7, 20, 3]
+   🔸 Inorder   = [9, 3, 15, 20, 7]
+
+   Step 1️⃣: Root = 3 (from postorder[last])
+
+   Step 2️⃣: Find 3 in inorder → index = 1
+       → Left of 3 = [9] → left subtree
+       → Right of 3 = [15, 20, 7] → right subtree
+
+   Step 3️⃣: For right subtree:
+       → Postorder = [15, 7, 20]
+       → Inorder = [15, 20, 7]
+       → Root = 20
+
+       Left = [15]
+       Right = [7]
+
+   Step 4️⃣: For left subtree:
+       → Postorder = [9]
+       → Inorder = [9] → leaf node
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Final Constructed Tree:
+              3
+            /   \
+           9     20
+                /  \
+              15    7
+
+
+
+/*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Summary:
 
