@@ -67,9 +67,16 @@ public class SerializeDeserializeBinaryTree {
         return sb.toString();
     }
 
-    /*
-🧪 DRY RUN: Serialization
+/*
+ Serialization:
+---------------
+- Traverse level by level
+- Append value
+- If node is null → append "null"
+- Push left & right for each node
 
+🧪 DRY RUN: Serialization
+------------------------
 Tree:
         1
        / \
@@ -158,8 +165,14 @@ Final Serialized String:
 
 
 /*
-🧪 DRY RUN: Deserialization
+Deserialization:
+---------------
+- Read values sequentially
+- Rebuild tree level by level
+- Each parent gets two children
 
+🧪 DRY RUN: Deserialization
+---------------------------
 Input:
 1,2,3,null,null,4,5,null,null,null,null
 
@@ -240,17 +253,6 @@ Convert Binary Tree ↔ String using BFS.
 
 📘 Concept:
 Use Level Order Traversal and explicitly store nulls.
-
-Serialization:
-- Traverse level by level
-- Append value
-- If node is null → append "null"
-- Push left & right for each node
-
-Deserialization:
-- Read values sequentially
-- Rebuild tree level by level
-- Each parent gets two children
 
 💡 Why levelSize?
 → Keeps traversal strictly level-wise
