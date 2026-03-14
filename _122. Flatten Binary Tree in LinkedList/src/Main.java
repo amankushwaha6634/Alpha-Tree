@@ -160,25 +160,6 @@ Final structure must look like:
      \
       4
 
-Rules:
-- Left pointer must become NULL
-- Right pointer forms the linked list
-- Order must follow PREORDER (Root → Left → Right)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Idea (Same concept as Morris Traversal):
-
-Instead of using recursion or stack,
-we temporarily rewire the tree.
-
-For every node:
-1️⃣ If left subtree exists
-2️⃣ Find predecessor (rightmost node of left subtree)
-3️⃣ Connect predecessor.right → current.right
-4️⃣ Move left subtree to right
-5️⃣ Set left = null
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Original Tree:
